@@ -14,7 +14,7 @@ def get_db_connection():
         host=os.getenv("DB_HOST", "mysql"),
         user=os.getenv("DB_USER", "root"),
         password=os.getenv("DB_PASSWORD", "Chandu@2007"),
-        database=os.getenv("DB_NAME", "timetable_db")
+        database=os.getenv("DB_NAME", "timetable_db"
     )
 
 # Load user data from JSON file
@@ -75,7 +75,7 @@ def save_timetable_to_db(timetable, username):
     for subject, start, end in timetable:
         query = "INSERT INTO timetables (username, subject, start_time, end_time) VALUES (%s, %s, %s, %s)"
         cursor.execute(query, (username, subject, start, end))
-
+    
     db.commit()
     cursor.close()
     db.close()
@@ -159,4 +159,3 @@ def ai_assistant():
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000, debug=True)
-
