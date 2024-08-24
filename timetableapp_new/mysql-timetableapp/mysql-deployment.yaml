@@ -1,0 +1,42 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mysql
+  namespace: default
+spec:
+  selector:
+    matchLabels:
+      app: mysql
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: mysql
+    spec:
+      nodeSelector:
+        kubernetes.io/os: linux  # Ensure the pod is scheduled on a Linux node
+      containers:
+      - image: mysql:5.7
+        name: mysql
+        env:
+        - name: MYSQL_ROOT_PASSWORD
+          value: Chandu@2007  # Replace with your desired root password
+        ports:
+        - containerPort: 3306
+          name: mysql
+        resources:
+          requests:
+            cpu: 100m
+            memory: 128Mi
+          limits:
+            cpu: 250m
+            memory: 256Mi
+        volumeMounts:
+        - name: azure
+          mountPath: /mnt/azure  # Mount the Azure Disk at MySQL's data directory
+      volumes:
+      - name: azure
+        persistentVolumeClaim:
+          claimName: pvc-azuredisk  # This should match the PVC name you created
+
