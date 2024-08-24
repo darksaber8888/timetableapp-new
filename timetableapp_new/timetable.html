@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Generated Timetable</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <style>
+        body {
+            background-image: url('https://i.gifer.com/5m5h.gif');
+            background-repeat:no-repeat;
+            background-size:cover;
+            background-color: #0f0f0f; /* Dark background */
+            color: #ffffff; /* White text */
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+        h1 {
+            text-align: center;
+            margin-top: 50px;
+            margin-bottom: 30px;
+            font-size: 32px;
+            color: #f9a602; /* Yellow */
+        }
+        .motivational-quote {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            font-size: 18px;
+            font-style: italic;
+            color: #FFFFFF; /* Yellow */
+        }
+        .timetable-container {
+            max-width: 800px;
+            margin: auto;
+            padding: 20px;
+            border-radius: 10px;
+        }
+        table {
+            border-collapse: collapse;
+            width: 100%;
+            margin-top: 20px;
+            margin-bottom: 20px;
+        }
+        th, td {
+            border: 1px solid #dddddd;
+            text-align: left;
+            padding: 8px;
+        }
+        th {
+            background-color: #1b1b1b; /* Dark grey */
+        }
+        .break {
+            background-color: #5a2020; /* Dark red */
+        }
+        .pomodoro-container {
+            max-width: 800px;
+            margin: auto;
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 50px;
+        }
+        #pomodoro-timer {
+            font-size: 34px;
+            text-align: center;
+            margin-top: 20px;
+        }
+        #start-button {
+            display: block;
+            margin: auto;
+            margin-top: 20px;
+            padding: 10px 20px;
+            font-size: 16px;
+            background-color: #4CAF50; /* Green */
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        #start-button:hover {
+            background-color: #45a049;
+        }
+        .music-box {
+            max-width: 800px;
+            margin: auto;
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 50px;
+            text-align: center;
+        }
+        .music-box h2 {
+            color: #f9a602; /* Yellow */
+        }
+        .music-box p {
+            color: #ffffff; /* White */
+        }
+        .music-box iframe {
+            margin-top: 20px;
+        }
+        .logout-button {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            padding: 10px 20px;
+            font-size: 16px;
+            background-color: #f44336; /* Red */
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .logout-button:hover {
+            background-color: #c0392b; /* Darker red */
+        }
+        .ai-assistant-button {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            padding: 10px 20px;
+            font-size: 16px;
+            background-color: #f44336; /* Red */
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+    </style> 
+</head>
+<body>
+    <div class="motivational-quote">
+        <p>"It does not matter how slowly</p>
+        <p> you go as long as you dont stop"</p>
+        <p>~conficius</p>
+    </div>
+
+    <h1>Generated Timetable</h1>
+    <div class="timetable-container">
+        {% autoescape false %}
+            {{ timetable_html|safe }}
+        {% endautoescape %}
+    </div>
+
+    <!-- Pomodoro Timer Section -->
+    <div class="pomodoro-container">
+        <h2>Pomodoro Timer</h2>
+        <div id="pomodoro-timer">
+            <span id="pomodoro-minutes">25</span>:<span id="pomodoro-seconds">00</span>
+        </div>
+        <button id="start-button" onclick="startPomodoroTimer()">Start Pomodoro Timer</button>
+    </div>
+
+    <!-- Music Box Section -->
+    <div class="music-box">
+        <h2>Play Music</h2>
+        <p>Enjoy some music from Spotify while you study!</p>
+        <iframe src="https://open.spotify.com/embed/playlist/3ayOnMTetG8E1c3q9VJmbi" width="400" height="380" frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>
+    </div>
+
+    <!-- Logout Button -->
+    <button class="logout-button" onclick="location.href='/logout'">Logout</button>
+
+    <button class="ai-assistant-button" onclick="location.href='/ai-assistant'">voice-assistant</button>
+
+
+    <!-- JavaScript to update Pomodoro timer -->
+    <script>
+        var pomodoroTimer;
+        var timerRunning = false;
+
+        function startPomodoroTimer() {
+            if (!timerRunning) {
+                pomodoroTimer = setInterval(updatePomodoroTimer, 1000);
+                timerRunning = true;
+                document.getElementById("start-button").style.display = "none";
+            }
+        }
+
+        function updatePomodoroTimer() {
+            var minutesLabel = document.getElementById("pomodoro-minutes");
+            var secondsLabel = document.getElementById("pomodoro-seconds");
+
+            var totalSeconds = parseInt(secondsLabel.innerHTML) + parseInt(minutesLabel.innerHTML) * 60;
+
+            totalSeconds--;
+            var minutes = Math.floor(totalSeconds / 60);
+            var seconds = totalSeconds % 60;
+
+            minutesLabel.innerHTML = pad(minutes);
+            secondsLabel.innerHTML = pad(seconds);
+
+            if (totalSeconds <= 0) {
+                clearInterval(pomodoroTimer);
+                // Call a function here to handle Pomodoro completion
+            }
+        }
+
+        function pad(val) {
+            var valString = val + "";
+            if (valString.length < 2) {
+                return "0" + valString;
+            } else {
+                return valString;
+            }
+        }
+    </script>
+</body>
+</html>
+
+
+
+
