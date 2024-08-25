@@ -10,14 +10,17 @@ COPY . /app
 # Install any needed packages specified in requirements.txt
 RUN pip install --no-cache-dir -r requirements.txt
 
+# Install gunicorn
+RUN pip install gunicorn
+
 # Make port 5000 available to the world outside this container
 EXPOSE 5000
 
 # Define environment variables
 ENV DB_HOST=mysql
 ENV DB_USER=root
-ENV DB_PASSWORD=Chandu@@007
+ENV DB_PASSWORD=Chandu@2007
 ENV DB_NAME=timetable_db
 
-# Run app.py when the container launches
-CMD ["python", "app.py"]
+# Run gunicorn when the container launches
+CMD ["gunicorn", "-w", "4", "-b", "0.0.0.0:5000", "app:app"]
