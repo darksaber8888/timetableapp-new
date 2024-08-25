@@ -1,0 +1,29 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: timetable-app
+  namespace: default
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: timetable-app
+  template:
+    metadata:
+      labels:
+        app: timetable-app
+    spec:
+      containers:
+      - name: timetable-app
+        image: capstoneapp.azurecr.io/timetable-app:gunicorn
+        ports:
+        - containerPort: 5000
+        env:
+        - name: DB_HOST
+          value: "mysql"
+        - name: DB_USER
+          value: "root"
+        - name: DB_PASSWORD
+          value: "Chandu@2007"
+        - name: DB_NAME
+          value: "timetable_db"
